@@ -1,4 +1,13 @@
 {
+  "name": "backend-express-app",
+  "version": "1.0.0",
+  "description": "A simple Express.js application",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
   "dependencies": {
     "express": "^5.1.0"
   }
