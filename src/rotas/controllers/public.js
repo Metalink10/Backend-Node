@@ -1,7 +1,7 @@
 import express from 'express';
-import prisma, { PrismaClient } from '@prisma/client';
+import { PrismaClient } from "@prisma/client";
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const router = express.Router();
 
