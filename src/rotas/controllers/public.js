@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 
 try {
-    // Rota para o cadastro de usuários
+  // Rota para o cadastro de usuários
   router.post("/cadastro", async (req, res) => {
     const dadosUsers = req.body;
 
@@ -35,13 +35,38 @@ try {
   router.get("/login", (req, res) => {
     const loginData = req.body;
     console.log(loginData);
-    res
-      .status(200)
-      .json({ mensagem: "Login realizado com sucesso!", dados: loginData });
-  });
+
+    const user = prisma.user.findUnique({
+      where: {
+        email: loginData.email,
+      },
+    });
+    if (user) {
+      res.status(200).json({ mensagem: "Usuário encontrado!" });
+    }
+    if (!user) {
+      return res.status(400).json({ mensagem: "Usuário não encontrado!" });
+    }
+    // Verifica se a senha informada corresponde à senha armazenada no banco de dados
+    const isPasswordValid = bcrypt.compareSync(
+      loginData.password,
+      user.password
+    );
+    // Se a senha for válida, retorna uma mensagem de sucesso
+    if (isPasswordValid) {
+      return res.status(201).json({ mensagem: "Login realizado com sucesso!" });
+    }
+    if (!isPasswordValid) {
+    return res.status(401).json({ mensagem: "Senha incorreta!" });
+  }
+
+  })
+
+  
+  // Se a autenticação for bem-sucedida, retorna uma mensagem de sucesso
 } catch (error) {
-    console.error("Erro ao processar a requisição:", error);
-    res.status(500).json({ mensagem: "Erro interno do servidor." });
+  console.error("Erro ao processar a requisição:", error);
+  res.status(500).json({ mensagem: "Erro interno do servidor." });
 }
 
 export default router;
